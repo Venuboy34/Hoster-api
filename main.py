@@ -13,7 +13,10 @@ from typing import Optional
 
 from config import settings
 from database import init_db, close_db
-from routers import auth, users, apps, deployments, functions, admin, logs
+# FIX: The 'apps' module import was causing an ImportError. 
+# We are changing it to 'app' (assuming the router file is named app.py) 
+# or a different existing module in the 'routers' directory.
+from routers import auth, users, app, deployments, functions, admin, logs 
 from middleware import RateLimitMiddleware
 from utils.logger import setup_logger
 
@@ -95,7 +98,8 @@ async def root():
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
-app.include_router(apps.router, prefix="/api/v1/apps", tags=["Applications"])
+# Using 'app' instead of 'apps' here.
+app.include_router(app.router, prefix="/api/v1/apps", tags=["Applications"])
 app.include_router(deployments.router, prefix="/api/v1/deployments", tags=["Deployments"])
 app.include_router(functions.router, prefix="/api/v1/functions", tags=["Serverless Functions"])
 app.include_router(logs.router, prefix="/api/v1/logs", tags=["Logs"])
